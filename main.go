@@ -20,7 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fromAddress, privateKey := ImportWallet("_PRIVATE_KEY_")
+	fromAddress, privateKey := ImportWallet("")
 
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
@@ -37,17 +37,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	auth.GasLimit = uint64(100584)
+	auth.GasLimit = uint64(100584 * 2)
 	auth.Nonce = big.NewInt(int64(nonce))
 	auth.GasPrice = gasPrice
 
-	toAddress := common.HexToAddress("0x9d3936dbd9a794ee31ef9f13814233d435bd806c")
-	instance, err := rpc.NewAtiaBlessingTransactor(toAddress, client)
+	contractAddress := common.HexToAddress("0x9d3936dbd9a794ee31ef9f13814233d435bd806c")
+	instance, err := rpc.NewAtiaBlessingTransactor(contractAddress, client)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tx, err := instance.ActivateStreak(auth, fromAddress)
+	addressGain := common.HexToAddress("0xe3e012D5c02EA2F2DC2Aa75E101f07CDb623ba27")
+	tx, err := instance.ActivateStreak(auth, addressGain)
 	if err != nil {
 		log.Fatal(err)
 	}
